@@ -53,7 +53,7 @@ CREATE TABLE `nomination` (
 	`is_newly_admitted` INT (11) COMMENT "",
 	`nominee_advisor` VARCHAR(40),
 	`graduate_semesters` INT (11),
-	`phone_number` INT(11),
+	`phone_number` VARCHAR(20),
 	`SPEAK_test` INT(11) COMMENT '1, 2, 3 = yes, no, graduated from US school',
 	`GTA_semesters` INT(11),
 	`GPA` float(10),

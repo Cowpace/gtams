@@ -6,7 +6,11 @@ session_start();
 $nominatorName = filter_var($_POST['nominatorName'], FILTER_SANITIZE_STRING);
 $PID = filter_var($_POST['nomineePID'], FILTER_SANITIZE_STRING);
 
-$stmt = $mysqli->prepare("SELECT nomination_id FROM nomination WHERE nominator_name = ? and nominee_PID = ?");
+$stmt = $mysqli->prepare("
+	SELECT nomination_id 
+	FROM nomination 
+	WHERE nominator_name = ? and nominee_PID = ?"
+);
 $stmt->bind_param('ss', $nominatorName, $PID);
 $stmt->execute();
 $stmt->bind_result($nom_id);
@@ -24,13 +28,15 @@ $gradStudent = filter_var($_POST['gradStudent']);
 $nominatorName = filter_var($_POST['nominatorName'], FILTER_SANITIZE_STRING);
 $GTA = filter_var($_POST['GTA']);
 $gpa = filter_var($_POST['gpa']);
-$tel = filter_var($_POST['nomineeTel']);
+$tel = filter_var($_POST['nomineeTel'], FILTER_SANITIZE_STRING);
 $speak = filter_var($map[$_POST['speak']]);
 
-//alert($phdAdvisor ." ". $gradStudent ." ". $tel ." ". $speak ." ". $GTA." ". $gpa." ". $nom_id);
-
-$stmt = $mysqli->prepare("UPDATE nomination SET nominee_advisor = ?, graduate_semesters = ?, phone_number = ?, SPEAK_test = ?, GTA_semesters = ?, GPA = ?, replied = NOW() WHERE nomination_id = ?");
-$stmt->bind_param('siiiidi', $phdAdvisor, $gradStudent, $tel, $speak, $GTA, $gpa, $nom_id);
+$stmt = $mysqli->prepare("
+	UPDATE nomination 
+	SET nominee_advisor = ?, graduate_semesters = ?, phone_number = ?, SPEAK_test = ?, GTA_semesters = ?, GPA = ?, replied = NOW() 
+	WHERE nomination_id = ?"
+);
+$stmt->bind_param('sisiidi', $phdAdvisor, $gradStudent, $tel, $speak, $GTA, $gpa, $nom_id);
 $stmt->execute();
 
 if ($mysqli->errno){
