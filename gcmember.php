@@ -1,5 +1,8 @@
 <?php
-session_start();
+include_once 'includes/db_connect.php';
+if(!isset($_SESSION)) { 
+	session_start(); 
+}
 $page_title = "GC Member";
 include_once ("header.php");
 ?>
@@ -8,7 +11,7 @@ include_once ("header.php");
 	     <link rel="stylesheet" href="styles/main.css" />
 	</head>
 	<div id="page">
-	<center><div class="logo"><a href="index.php" style="text-decoration: none; color: #22222;">GTAMS</a></div></center>
+	<br><br>
 	<title>Nominee Info</title>
 	<section class="gcmemberform cf">
 	<form name="gcmember" action="index_submit" method="get" accept-charset="utf-8">

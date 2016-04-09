@@ -11,8 +11,7 @@ include_once("header.php");?>
 	</head>
 	<body>
 	<div id="page">
-		<br><br><center><div class="logo"><a href="index.php" style="text-decoration: none; color: #22222;">GTAMS</a></div></center>
-		<br>
+		<br><br>
 		<?php if(!isset($_SESSION['user_ID'])): ?>		
 			<center><p class="body">
 				<h3>Login Below</h3>

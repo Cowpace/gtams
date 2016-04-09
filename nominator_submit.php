@@ -2,9 +2,9 @@
 include_once 'includes/db_connect.php';
 include_once 'includes/functions.php';
 
-session_start();
-
-
+if(!isset($_SESSION)) { 
+	session_start(); 
+}
 
 $to_binary = array("yes" => 1, "no" => 0);
 
@@ -22,9 +22,36 @@ $sent_time = date("Y-m-d H:i:s");
 $temp = $mysqli->query("SELECT session_id FROM sessions WHERE is_active = 1")->fetch_object()->session_id;
 
 #Email function
-$subject = "You've been nominated!";
-$headers = "From: ".$nominatorName;
-$body_message = "Follow this link to access: localhost/gtams/nominee.php\n";
+//Recipient(s)
+$to  = $nomineeEmail; #. ', '; // note the comma
+#$nomineeEmail .= 'wez@example.com';
+
+//Subject
+$subject = 'You have been nominated!';
+
+// message
+$message = '
+<html>
+<head>
+  <title>GTAMS Nomination</title>
+</head>
+<body>
+  <p>
+	Follow this <a href="localhost/gtams/nominee.php">link</a>
+  </p>
+</body>
+</html>
+';
+
+// To send HTML mail, the Content-type header must be set
+$headers  = 'MIME-Version: 1.0' . "\r\n";
+$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+// Additional headers
+$headers .= 'To: Mary <mary@example.com>, Kelly <kelly@example.com>' . "\r\n";
+$headers .= 'From: '.$nominatorName.' <gtams@cop4710.com>' . "\r\n";
+$headers .= 'Cc:' . "\r\n";
+$headers .= 'Bcc:' . "\r\n";
 
 #query
 $stmt = $mysqli->prepare("INSERT INTO nomination (session_id, nominator_name, nominator_email, nominee_name, rank, nominee_PID, nominee_email, is_phd, is_newly_admitted, sent) VALUES (?,?,?,?,?,?,?,?,?,?)");
@@ -36,7 +63,7 @@ if ($mysqli->errno){
 	alert("Query failed with error code = " . $mysqli->errno);
 }
 
-$mail_status = mail($nomineeEmail, $subject, $body_message, $headers);
+$mail_status = mail($to, $subject, $message, $headers);
 if($mail_status){
 	alert("Message Sent to " . $nomineeEmail);
 	//header('Location: ../gtams/nominator.php');

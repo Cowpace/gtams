@@ -87,7 +87,7 @@ CREATE TABLE `ListPublication` (
 INSERT INTO `sessions` (`app_deadline`, `nom_init_deadline`, `nom_respond_deadline`, `nom_complete_deadline`, `is_active`) VALUES ('1/1/11', '1/1/12', '1/1/13', '1/1/14', 1);
 
 #Your original insert was wrong, Auto-Increment starts at 1, not 0.
-INSERT INTO nomination (session_id, nominator_name, nominator_email, nominee_name, rank, nominee_PID, nominee_email, is_phd, is_newly_admitted, sent) VALUES (1,'Shrek','Shrek@swamp.com','Fedora',99,'F2345678','fed.dora@reddit.com',1,0,NOW());
+INSERT INTO nomination (`session_id`, `nominator_name`, `nominator_email`, `nominee_name`, `rank`, `nominee_PID`, `nominee_email`, `is_phd`, `is_newly_admitted`, `sent`) VALUES (1,'Shrek','Shrek@swamp.com','Fedora',99,'F2345678','fed.dora@reddit.com',1,0,NOW());
 
 #Generate default logins for three accepted users
 INSERT INTO `users` (`user_Role`, `username`, `password`, `user_Email`, `reg_date`, `realname`) VALUES ('ADMIN','admin','password','admin@god.me',NOW(), "MODS = GODS");
@@ -96,14 +96,14 @@ INSERT INTO `users` (`user_Role`,`username`,`password`,`user_Email`,`reg_date`, 
 INSERT INTO `users` (`user_Role`,`username`,`password`,`user_Email`,`reg_date`, `realname`) VALUES ('NOMINATOR','nominator','password','nominator@nom.me',NOW(), "Arup Guha");
 
 #Generate three default courses
-INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Couse_Grade`) VALUES (0, 'Database Systems','A');
-INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Couse_Grade`) VALUES (0, 'Programming 101','B+');
-INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Couse_Grade`) VALUES (0, 'Memes Study','D');
+INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Couse_Grade`) VALUES (1, 'Database Systems','A');
+INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Couse_Grade`) VALUES (1, 'Programming 101','B+');
+INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Couse_Grade`) VALUES (1, 'Memes Study','D');
 
 #Generate three default publications
-INSERT INTO `ListPublication` (`nomination_id`, `Publication_Name`,`Publication_Citation`) VALUES (0, 'PHP and MySQL','Wikipedia');
-INSERT INTO `ListPublication` (`nomination_id`, `Publication_Name`,`Publication_Citation`) VALUES (0, 'The Effect of Dynamic Code','UCF Code Handbook');
-INSERT INTO `ListPublication` (`nomination_id`, `Publication_Name`,`Publication_Citation`) VALUES (0, 'Memes Case Study','Reddit.com');
+INSERT INTO `ListPublication` (`nomination_id`, `Publication_Name`,`Publication_Citation`) VALUES (1, 'PHP and MySQL','Wikipedia');
+INSERT INTO `ListPublication` (`nomination_id`, `Publication_Name`,`Publication_Citation`) VALUES (1, 'The Effect of Dynamic Code','UCF Code Handbook');
+INSERT INTO `ListPublication` (`nomination_id`, `Publication_Name`,`Publication_Citation`) VALUES (1, 'Memes Case Study','Reddit.com');
 
 #
 #INSERT INTO `ApplicationForm` () VALUES ();

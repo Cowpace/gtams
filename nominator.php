@@ -1,5 +1,7 @@
 <?php 
-session_start(); 
+if(!isset($_SESSION)) { 
+	session_start(); 
+}
 
 $page_title = "Nominator";
 include_once ("header.php");
@@ -8,46 +10,48 @@ include_once ("header.php");
 	<head>
 	     <link rel="stylesheet" href="styles/main.css" />
 	</head>
-	
-	<center><div class="logo"><a href="index.php" style="text-decoration: none; color: #22222;">GTAMS</a></div></center>
-
 	<section class="nominationform cf">
+	<br><br>	
+		<div align=center>
 		<form name="nomination" action="nominator_submit.php" method="post" accept-charset="utf-8">
 			<body>
-			  <p><label for="nominatorName">Nominator name</label>
-			  <input type="text" name="nominatorName" required></p>
+			<table>
+			  <tr><td><label for="nominatorName">Nominator name</label></td>
+			  <td><input type="text" name="nominatorName" required></td></tr>
+			  
+			  <tr><td><label for="nominatorMail">Nominator email</label></td>
+			  <td><input type="email" name="nominatorMail" placeholder="name@example.me" required></td></tr>
 
-			  <p><label for="nominatorMail">Nominator email</label>
-			  <input type="email" name="nominatorMail" placeholder="name@example.me" required></p>
+			  <tr><td><label for="nomineeName">Nominee name</label></td>
+			  <td><input type="text" name="nomineeName" required></td></tr>
 
-			  <p><label for="nomineeName">Nominee name</label>
-			  <input type="text" name="nomineeName" required></p>
+			  <tr><td><label for="nomineeRank">Nominee rank</label></td>
+			  <td><input type="number" name="nomineeRank" required></td></tr>
 
-			  <p><label for="nomineeRank">Nominee rank</label>
-			  <input type="number" name="nomineeRank" required></p>
+			  <tr><td><label for="nomineePID">Nominee PID</label></td>
+			  <td><input type="text" name="nomineePID" required></p></td></tr>
 
-			  <p><label for="nomineePID">Nominee PID</label>
-			  <input type="text" name="nomineePID" required></p>
+			  <tr><td><label for="nomineeEmail">Nominee email</label>
+			  <td><input type="email" name="nomineeEmail" placeholder="name@example.me" required></td></tr>
 
-			  <p><label for="nomineeEmail">Nominee email</label>
-			  <input type="email" name="nomineeEmail" placeholder="name@example.me" required></p>
+			  <tr><td><label for="phdCheck">Is the nominee currently a Ph.d student in the Department of Computer Science?</label></td></tr>
+			  <td><label for="yes1">Yes</label>
+			  <input type="radio" id="yes1" name="phdCheck" value="yes"></td>
+			  <td><label for="no1">No</label>
+			  <input type="radio" id="no1" name="phdCheck" value="no" checked></td></tr>
 
-			  <p><label for="phdCheck">Is the nominee currently a Ph.d student in the Department of Computer Science?</label><br>
-			  <label for="yes1">Yes</label>
-			  <input type="radio" id="yes1" name="phdCheck" value="yes"><br>
-			  <label for="no1">No</label>
-			  <input type="radio" id="no1" name="phdCheck" value="no" ></p>
+			  <tr><td><label for="phdNew">Is the nominee currently a newly admitted Ph.d student?</label></td></tr>
+			  <td><label for="yes2">Yes</label>
+			  <input type="radio" id="yes2" name="phdNew" value="yes"></td>
+			  <td><label for="no2">No</label>
+			  <input type="radio" id="no2" name="phdNew" value="no" checked></td>
 
-			  <p><label for="phdNew">Is the nominee currently a newly admitted Ph.d student?</label><br>
-			  <label for="yes2">Yes</label>
-			  <input type="radio" id="yes2" name="phdNew" value="yes"><br>
-			  <label for="no2">No</label>
-			  <input type="radio" id="no2" name="phdNew" value="no" ></p>
-
-			  <p><input type="submit" value="Submit"></p>
+			  <tr><td style="text-align: center;"><input type="submit" value="Submit" ></td></tr>
+			  </table>
 			</body>
 		</form>
+		</div>
 	</section>
-	
+
 </html>
 <?php include_once ("footer.php");?>

@@ -12,9 +12,8 @@ include_once("header.php"); ?>
 	<head>
 	     <link rel="stylesheet" href="styles/main.css" />
 	</head>
-		<div id="page">
-		<br><br><center><div class="logo"><a href="index.php" style="text-decoration: none; color: #22222;">GTAMS</a></div></center>		
-		<br>		
+		<div id="page">	
+		<br><br>		
 		<center><p class="body">
 			<h3>Register new user</h3>
 			<form action="adduser_submit.php" method="post">
@@ -45,7 +44,7 @@ include_once("header.php"); ?>
 								<label for="GCCHAIR">NOMINATOR</label>
 								<input type="radio" id="GCCHAIR" name="selection" value="NOMINATOR" >
 							</td>
-						</tr>					
+										
 						<tr><td> 
 						<input type="hidden" name="form_token" value="<?php echo $form_token; ?>" />						
 						<input type="submit" value="Register" /> 
@@ -60,7 +59,6 @@ include_once("header.php"); ?>
 					<!--Research to query and display gc members for selection-->
 					<tr>
 						<td><label for="members">Choose gc members for this session:</label></td>
-						<!--Added a bit of scalability to the select box....GOOD JOB KYLE!!!-->
 						<td><select multiple name="members[]" size=auto style='height: 100%;'>
 						<?php 
 						$result = $mysqli->query("SELECT user_id, realname FROM users WHERE user_Role = 'GCMEMBER'");
