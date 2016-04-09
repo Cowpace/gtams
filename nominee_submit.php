@@ -7,15 +7,16 @@ $nominatorName = filter_var($_POST['nominatorName'], FILTER_SANITIZE_STRING);
 $PID = filter_var($_POST['nomineePID'], FILTER_SANITIZE_STRING);
 
 $stmt = $mysqli->prepare("
-	SELECT nomination_id 
-	FROM nomination 
-	WHERE nominator_name = ? and nominee_PID = ?"
+	SELECT n.nomination_id 
+	FROM nomination n, users u
+	WHERE u.realname = ? and n.nominee_PID = ? and u.user_ID = n.nominator_id"
 );
 $stmt->bind_param('ss', $nominatorName, $PID);
 $stmt->execute();
 $stmt->bind_result($nom_id);
 if (!$stmt->fetch()){
 	alert("Failed to grab nomination_id");
+	exit();
 }
 else if ($stmt->num_rows > 1){
 	alert("More than one match was found for nomination_id");

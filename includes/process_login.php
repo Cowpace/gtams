@@ -8,6 +8,8 @@ if (isset($_POST['username'], $_POST['password'])) {
     if (login($username, $password, $mysqli) == true) {
         // Login success		
 		$role = lookup($username, "role",$mysqli);
+		$_SESSION["user_ID"] = lookup($username, "id",$mysqli);
+		$_SESSION["user_Role"] = $role;
 		if($role == "ADMIN"){
 			header("Location: ../adduser.php");
 			exit;

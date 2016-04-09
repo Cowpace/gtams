@@ -21,6 +21,12 @@ $sent_time = date("Y-m-d H:i:s");
 
 $temp = $mysqli->query("SELECT session_id FROM sessions WHERE is_active = 1")->fetch_object()->session_id;
 
+$nominator_id = $_SESSION['user_ID'];
+if (!($nominator_id > 0)){
+	alert("failed to grab user_ID (".$nominator_id.") of user logged in");
+	exit();
+}
+
 #Email function
 //Recipient(s)
 $to  = $nomineeEmail; #. ', '; // note the comma
@@ -54,9 +60,9 @@ $headers .= 'Cc:' . "\r\n";
 $headers .= 'Bcc:' . "\r\n";
 
 #query
-$stmt = $mysqli->prepare("INSERT INTO nomination (session_id, nominator_name, nominator_email, nominee_name, rank, nominee_PID, nominee_email, is_phd, is_newly_admitted, sent) VALUES (?,?,?,?,?,?,?,?,?,?)");
-$stmt->bind_param('isssissiis', 
-	$temp, $nominatorName, $nominatorMail, $nomineeName, $nomineeRank, $nomineePID, $nomineeEmail, $phdCheck, $phdNew, $sent_time);  
+$stmt = $mysqli->prepare("INSERT INTO nomination (session_id, nominator_id, nominee_name, rank, nominee_PID, nominee_email, is_phd, is_newly_admitted, sent) VALUES (?,?,?,?,?,?,?,?,?)");
+$stmt->bind_param('iisissiis', 
+	$temp, $nominator_id, $nomineeName, $nomineeRank, $nomineePID, $nomineeEmail, $phdCheck, $phdNew, $sent_time);  
 $stmt->execute();  
 
 if ($mysqli->errno){

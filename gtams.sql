@@ -43,8 +43,7 @@ CREATE TABLE `users` (
 CREATE TABLE `nomination` (
 	`nomination_id` INT (11) NOT NULL AUTO_INCREMENT,
 	`session_id` INT(11) NOT NULL COMMENT 'the id for the session the Admin set up',
-	`nominator_name` VARCHAR(40),
-	`nominator_email` VARCHAR(40),
+	`nominator_id` INT(11) NOT NULL COMMENT 'the user_id for the nominator',
 	`nominee_name` VARCHAR(40),
 	`rank` int(11),
 	`nominee_PID` VARCHAR(40),
@@ -87,7 +86,7 @@ CREATE TABLE `ListPublication` (
 INSERT INTO `sessions` (`app_deadline`, `nom_init_deadline`, `nom_respond_deadline`, `nom_complete_deadline`, `is_active`) VALUES ('1/1/11', '1/1/12', '1/1/13', '1/1/14', 1);
 
 #Your original insert was wrong, Auto-Increment starts at 1, not 0.
-INSERT INTO nomination (`session_id`, `nominator_name`, `nominator_email`, `nominee_name`, `rank`, `nominee_PID`, `nominee_email`, `is_phd`, `is_newly_admitted`, `sent`) VALUES (1,'Shrek','Shrek@swamp.com','Fedora',99,'F2345678','fed.dora@reddit.com',1,0,NOW());
+INSERT INTO nomination (`session_id`, `nominator_id`, `nominee_name`, `rank`, `nominee_PID`, `nominee_email`, `is_phd`, `is_newly_admitted`, `sent`) VALUES (1, 4,'Fedora',99,'F2345678','fed.dora@reddit.com',1,0,NOW());
 
 #Generate default logins for three accepted users
 INSERT INTO `users` (`user_Role`, `username`, `password`, `user_Email`, `reg_date`, `realname`) VALUES ('ADMIN','admin','password','admin@god.me',NOW(), "MODS = GODS");
