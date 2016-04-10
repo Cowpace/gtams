@@ -67,4 +67,11 @@ function alert($message) {
 		</script>
 	<?php
 }
+
+function debug_alert($message) {
+	?>	<script>
+			alert(" <?php echo $message ?> ");
+		</script>
+	<?php
+}
 ?>
