@@ -40,6 +40,7 @@ include_once ("header.php");
 			var element = document.createElement("input");
 			element.type = attrs[i][1];
 			element.name = elemName + "_" + attrs[i][0] + "[]";
+			element.required = true;
 			cell2.appendChild(element);
 		}
 		/*

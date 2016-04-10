@@ -68,7 +68,7 @@ CREATE TABLE `ListGradCourse` (
   `ListGradCourse_ID` INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   `nomination_id` INT(11) NOT NULL,
   `Course_Name` VARCHAR(45) NOT NULL,
-  `Couse_Grade` VARCHAR(2) NOT NULL,
+  `Course_Grade` VARCHAR(2) NOT NULL,
   foreign key (`nomination_id`) references `nomination`(`nomination_id`)
 );
 
@@ -80,6 +80,17 @@ CREATE TABLE `ListPublication` (
   `Publication_Citation` VARCHAR(512) NOT NULL,
   foreign key (`nomination_id`) references `nomination`(`nomination_id`)
 );
+
+#Create table for advisors
+CREATE TABLE `ListAdvisor` (
+  `ListAdvisor_ID` INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `nomination_id` INT(11) NOT NULL,
+  `advisor_name` VARCHAR(48) NOT NULL,
+  `startdate` VARCHAR(512) NOT NULL,
+  `enddate` VARCHAR(512) NOT NULL,
+  foreign key (`nomination_id`) references `nomination`(`nomination_id`)
+);
+
 
 #Fill Tables
 ################################################
@@ -95,9 +106,9 @@ INSERT INTO `users` (`user_Role`,`username`,`password`,`user_Email`,`reg_date`, 
 INSERT INTO `users` (`user_Role`,`username`,`password`,`user_Email`,`reg_date`, `realname`) VALUES ('NOMINATOR','nominator','password','nominator@nom.me',NOW(), "Arup Guha");
 
 #Generate three default courses
-INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Couse_Grade`) VALUES (1, 'Database Systems','A');
-INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Couse_Grade`) VALUES (1, 'Programming 101','B+');
-INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Couse_Grade`) VALUES (1, 'Memes Study','D');
+INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Course_Grade`) VALUES (1, 'Database Systems','A');
+INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Course_Grade`) VALUES (1, 'Programming 101','B+');
+INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Course_Grade`) VALUES (1, 'Memes Study','D');
 
 #Generate three default publications
 INSERT INTO `ListPublication` (`nomination_id`, `Publication_Name`,`Publication_Citation`) VALUES (1, 'PHP and MySQL','Wikipedia');
