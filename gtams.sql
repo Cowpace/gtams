@@ -91,14 +91,14 @@ CREATE TABLE `ListAdvisor` (
   `enddate` VARCHAR(512) NOT NULL,
   foreign key (`nomination_id`) references `nomination`(`nomination_id`)
 );
-CREATE TABLE `Score` (
-  `GCMember_ID` INT(11) UNSIGNED NOT NULL,
-  `nomination_id` INT(11) UNSIGNED NOT NULL,
+CREATE TABLE `score` (
+  `user_ID` INT(11) NOT NULL,
+  `nomination_id` INT(11) NOT NULL,
   `Score` INT NOT NULL DEFAULT 0,
   `ScoredOn` DATETIME NOT NULL,
   `Comments` VARCHAR(512) NULL,
-  PRIMARY KEY (`GCMember_ID`, `nomination_id`),
-  FOREIGN KEY (`GCMember_ID`) REFERENCES `users` (`user_id`),
+  PRIMARY KEY (`user_ID`, `nomination_id`),
+  FOREIGN KEY (`user_ID`) REFERENCES `users` (`user_id`),
   FOREIGN KEY (`nomination_id`) REFERENCES `nomination` (`nomination_id`)
 );
 
@@ -109,10 +109,15 @@ CREATE TABLE `Score` (
 INSERT INTO `users` (`user_Role`, `username`, `password`, `user_Email`, `reg_date`, `realname`) VALUES ('ADMIN','admin','password','admin@god.me',NOW(), "MODS = GODS");
 INSERT INTO `users` (`user_Role`,`username`,`password`,`user_Email`,`reg_date`, `realname`) VALUES ('GCCHAIR','gcchair','password','gcchair@chair.me',NOW(), "The Chair");
 INSERT INTO `users` (`user_Role`,`username`,`password`,`user_Email`,`reg_date`, `realname`) VALUES ('GCMEMBER','gcmember','password','gcmember@pleb.me',NOW(), "A Member");
+INSERT INTO `users` (`user_Role`,`username`,`password`,`user_Email`,`reg_date`, `realname`) VALUES ('GCMEMBER','gcmember2','password','gcmember2@pleb.me',NOW(), "An Member");
 INSERT INTO `users` (`user_Role`,`username`,`password`,`user_Email`,`reg_date`, `realname`) VALUES ('NOMINATOR','nominator','password','nominator@nom.me',NOW(), "Arup Guha");
 
+#Generate session
 INSERT INTO `sessions` (`app_deadline`, `nom_init_deadline`, `nom_respond_deadline`, `nom_complete_deadline`, `is_active`) VALUES ('1/1/11', '1/1/12', '1/1/13', '1/1/14', 1);
-INSERT INTO nomination (`session_id`, `nominator_id`, `nominee_name`, `rank`, `nominee_PID`, `nominee_email`, `is_phd`, `is_newly_admitted`, `sent`) VALUES (1, 4,'Fedora',5,'F2345678','fed.dora@reddit.com',1,0,NOW());
+
+#Generate nomination
+INSERT INTO nomination (`session_id`, `nominator_id`, `nominee_name`, `rank`, `nominee_PID`, `nominee_email`, `is_phd`, `is_newly_admitted`, `sent`) VALUES (1, 5,'Fedora',5,'F2345678','fed.dora@reddit.com',1,0,NOW());
+
 #Generate three default courses
 INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Course_Grade`) VALUES (1, 'Database Systems','A');
 INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Course_Grade`) VALUES (1, 'Programming 101','B+');
@@ -128,6 +133,10 @@ INSERT INTO `ListPublication` (`nomination_id`, `Publication_Name`,`Publication_
 
 #Generate Application Scores
 #INSERT INTO `ApplicationScore` (`GCMember_ID`,`Score`,`ScoredOn`) VALUES (1,30,NOW());
+
+#Generate score
+INSERT INTO `score` (`user_ID`,`nomination_id`,`Score`,`ScoredOn`,`Comments`) VALUES (3,1,100,NOW(),'A real swell fella.');
+INSERT INTO `score` (`user_ID`,`nomination_id`,`Score`,`ScoredOn`,`Comments`) VALUES (4,1,50,NOW(),'Needs work');
 
 #Test Tables
 ################################################
