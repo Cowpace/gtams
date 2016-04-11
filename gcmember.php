@@ -1,5 +1,7 @@
 <?php
 include_once 'includes/db_connect.php';
+include_once 'includes/functions.php';
+
 if(!isset($_SESSION)) { 
 	session_start(); 
 }
@@ -13,11 +15,9 @@ include_once ("header.php");
 	<div id="page">
 	<br><br>
 	<title>Nominee Info</title>
-	<section class="gcmemberform cf">
-	<form name="gcmember" action="index_submit" method="get" accept-charset="utf-8">
+	<section class="gcmemberform cf">	
 		<body>
-		<center>
-		<form action="gcmember_submit.php" method="post">
+		<center>		
 		  <table border="1" style="width:100%">
 			<tr>
 				<th>Nominator name</th>
@@ -25,7 +25,7 @@ include_once ("header.php");
 				<th>Ranking</th>
 				<th>New or Existing</th>
 			<?php 
-				$result = $mysqli->query("SELECT user_id, realname FROM users WHERE user_Role = 'GCMEMBER' ORDER BY realname");
+				$result = $mysqli->query("SELECT realname FROM users WHERE user_Role = 'GCMEMBER' ORDER BY realname");
 				$i = 0;
 				
 				while ($obj = $result->fetch_object()){
@@ -38,19 +38,16 @@ include_once ("header.php");
 				<th>Submit Score</th>
 			</tr>
 			<?php
-				$result = $mysqli->query("SELECT u.realname, n.session_id, n.nominee_name, n.rank, n.is_newly_admitted 
+				$result = $mysqli->query("SELECT u.realname, n.session_id, n.nominee_name, n.rank, n.is_newly_admitted, n.nomination_id
 									FROM nomination n, users u
 									WHERE u.user_ID = n.nominator_id
-									ORDER BY realname");
-				$result2 = $mysqli->query("SELECT u.realname, u.user_ID, s.Score
-									FROM users u, score s
-									WHERE u.user_Role = 'GCMEMBER' AND
-									u.user_ID = s.user_ID
 									ORDER BY realname");
 				
 				while($obj = $result->fetch_object()){
 					if($obj->session_id == 1){
-					echo "<tr>";
+						echo "<form action='gcmember_submit.php' method='post'>";
+						echo "<tr>";
+						echo "<input type='hidden' name='nomination_id' value=".$obj->nomination_id.">";
 						echo "<td>".$obj->realname."</td>";
 						echo "<td>".$obj->nominee_name."</td>";
 						echo "<td>".$obj->rank."</td>";
@@ -60,24 +57,26 @@ include_once ("header.php");
 						else{
 							echo "<td>Existing</td>";
 						}
+						$result2 = $mysqli->query("SELECT user_ID, realname FROM users WHERE user_Role = 'GCMEMBER' ORDER BY realname");
 						$average = 0;
 						$count = 0;
 						$flag = false;
 						while($obj2 = $result2->fetch_object()){
-							if($_SESSION['user_ID'] == $obj2->user_ID && $obj2->Score == 0){
-								echo "<td><input type='number' id='score' name='score[]' min='1' max='100'></td>";
+							$obj3 = $mysqli->query("SELECT Score FROM score WHERE user_ID = ".$obj2->user_ID." AND nomination_id = ".$obj->nomination_id)->fetch_object()->Score;
+							if($_SESSION['user_ID'] == $obj2->user_ID && $obj3 == 0){
+								echo "<td><input type='number' id='score' name='score' min='1' max='100'></td>";
 								$flag = true;
 							}
 							else{
 								$count++;
-								$average += $obj2->Score;
-								echo "<td>".$obj2->Score."</td>";	
+								$average += $obj3;
+								echo "<td>".$obj3."</td>";	
 							}
 	
 						}
 						echo "<td>".$average/$count."</td>";						
 						if($flag){
-							echo "<td><input type='text' id='comment' name='comment[]'></td>";
+							echo "<td><input type='text' id='comment' name='comment'></td>";
 							echo "<td><input type='submit' value='Score Nominee' /></td>";
 						}
 						else{
@@ -86,15 +85,13 @@ include_once ("header.php");
 						}
 						
 					echo "</tr>";
+					echo "</form>";
 					}
 				}
 			?>
-		  </table>
-		  
-		  </form>
+		  </table>		  		  
 		  </center>
 		</body>
-	</form>
 	</section>
 	</div>
 </html>

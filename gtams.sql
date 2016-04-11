@@ -94,9 +94,9 @@ CREATE TABLE `ListAdvisor` (
 CREATE TABLE `score` (
   `user_ID` INT(11) NOT NULL,
   `nomination_id` INT(11) NOT NULL,
-  `Score` INT NOT NULL DEFAULT 0,
-  `ScoredOn` DATETIME NOT NULL,
-  `Comments` VARCHAR(512) NULL,
+  `Score` INT(3) DEFAULT 0,
+  `ScoredOn` DATETIME,
+  `Comments` VARCHAR(512),
   PRIMARY KEY (`user_ID`, `nomination_id`),
   FOREIGN KEY (`user_ID`) REFERENCES `users` (`user_id`),
   FOREIGN KEY (`nomination_id`) REFERENCES `nomination` (`nomination_id`)

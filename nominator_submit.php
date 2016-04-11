@@ -58,6 +58,7 @@ $headers .= 'To: '.$nomineeName.' <'.$nomineeEmail.'>' . "\r\n";
 $headers .= 'From: '.$nominatorName.' <gtams@cop4710.com>' . "\r\n";
 $headers .= 'Cc:' . "\r\n";
 $headers .= 'Bcc:' . "\r\n";
+$mail_status = mail($to, $subject, $message, $headers);
 
 #query
 $stmt = $mysqli->prepare("INSERT INTO nomination (session_id, nominator_id, nominee_name, rank, nominee_PID, nominee_email, is_phd, is_newly_admitted, sent) VALUES (?,?,?,?,?,?,?,?,?)");
@@ -69,17 +70,23 @@ if ($mysqli->errno){
 	alert("Query failed with error code = " . $mysqli->errno);
 }
 
-$mail_status = mail($to, $subject, $message, $headers);
+$result2 = $mysqli->query("SELECT user_ID FROM users WHERE user_Role = 'GCMEMBER'");
+$y = $mysqli->query("SELECT nomination_id FROM nomination ORDER BY nomination_id DESC LIMIT 1")->fetch_object()->nomination_id;
+
+while($obj = $result2->fetch_object()){
+	$stmt2 = $mysqli->prepare("INSERT INTO `score` (`user_id`, `nomination_id`) VALUES (?,?)");
+	$stmt2->bind_param('ii', $obj->user_ID, $y);
+	$stmt2->execute();
+	if ($mysqli->errno){
+		alert("Query failed with error code = " . $mysqli->errno." ".$obj->user_ID." ".$y);
+	}
+}
+
 if($mail_status){
 	alert("Message Sent to " . $nomineeEmail);
-	//header('Location: ../gtams/nominator.php');
-	//echo '<script language="javascript" type="text/javascript">
-	//	alert("Sent message");
-	//	//window.location = "nominator.php";
-	//</script>';
+
 }
 else {
     alert("Message failed. Please, send an email to gordon@template-help.com");
 }
 ?>
-

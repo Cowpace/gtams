@@ -4,22 +4,21 @@ include_once 'includes/functions.php';
 if(!isset($_SESSION)) { 
 	session_start(); 
 }
-	$user_id = $_SESSION['user_id'];
+	$user_id = $_SESSION['user_ID'];
+	$nomination_id = $_POST['nomination_id'];
 	$score = $_POST['score'];
 	$comment = $_POST['comment'];
 	$ScoredOn = date("Y-m-d H:i:s");
 	
-	$x = 0;
-	foreach($score as $s)
-	$stmt = $mysqli->prepare("INSERT INTO score (user_ID, nomination_id, Score, ScoredOn, Comments) VALUES (?,?,?,?,?)");
-	$stmt->bind_param('sssss', $user_id, $password, $email, $role, $reg_date, $name);  
+	$stmt = $mysqli->prepare("UPDATE score SET Score=?, ScoredOn=?, Comments=? WHERE user_ID=? && nomination_id=?");
+	$stmt->bind_param('issii', $score, $ScoredOn, $comment, $user_id, $nomination_id);  
 	$stmt->execute();  
 	
 	if($mysqli->errno){
-		$message = "Scores not submitted";
+		$message = 'Score not submitted';
 	}
 	else{
-		$message = 'Scores submitted';
+		$message = 'Score submitted';
 	}
 alert($message);
 ?>
