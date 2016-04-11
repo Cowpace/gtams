@@ -60,7 +60,8 @@ CREATE TABLE `nomination` (
 	`replied` TIMESTAMP COMMENT 'when the nomination was replied to by the nominee',
 	`completed` TIMESTAMP COMMENT 'when the nominee form was confirmed by the nominator',
 	primary key (`nomination_id`),
-	foreign key (`session_id`) references `sessions`(`session_id`)
+	foreign key (`session_id`) references `sessions`(`session_id`),
+	foreign key (`nominator_id`) references `users`(`user_id`)
 );
 
 #Create table for grad courses
@@ -90,21 +91,28 @@ CREATE TABLE `ListAdvisor` (
   `enddate` VARCHAR(512) NOT NULL,
   foreign key (`nomination_id`) references `nomination`(`nomination_id`)
 );
+CREATE TABLE `Score` (
+  `GCMember_ID` INT(11) UNSIGNED NOT NULL,
+  `nomination_id` INT(11) UNSIGNED NOT NULL,
+  `Score` INT NOT NULL DEFAULT 0,
+  `ScoredOn` DATETIME NOT NULL,
+  `Comments` VARCHAR(512) NULL,
+  PRIMARY KEY (`GCMember_ID`, `nomination_id`),
+  FOREIGN KEY (`GCMember_ID`) REFERENCES `users` (`user_id`),
+  FOREIGN KEY (`nomination_id`) REFERENCES `nomination` (`nomination_id`)
+);
 
 
 #Fill Tables
 ################################################
-INSERT INTO `sessions` (`app_deadline`, `nom_init_deadline`, `nom_respond_deadline`, `nom_complete_deadline`, `is_active`) VALUES ('1/1/11', '1/1/12', '1/1/13', '1/1/14', 1);
-
-#Your original insert was wrong, Auto-Increment starts at 1, not 0.
-INSERT INTO nomination (`session_id`, `nominator_id`, `nominee_name`, `rank`, `nominee_PID`, `nominee_email`, `is_phd`, `is_newly_admitted`, `sent`) VALUES (1, 4,'Fedora',99,'F2345678','fed.dora@reddit.com',1,0,NOW());
-
 #Generate default logins for three accepted users
 INSERT INTO `users` (`user_Role`, `username`, `password`, `user_Email`, `reg_date`, `realname`) VALUES ('ADMIN','admin','password','admin@god.me',NOW(), "MODS = GODS");
 INSERT INTO `users` (`user_Role`,`username`,`password`,`user_Email`,`reg_date`, `realname`) VALUES ('GCCHAIR','gcchair','password','gcchair@chair.me',NOW(), "The Chair");
 INSERT INTO `users` (`user_Role`,`username`,`password`,`user_Email`,`reg_date`, `realname`) VALUES ('GCMEMBER','gcmember','password','gcmember@pleb.me',NOW(), "A Member");
 INSERT INTO `users` (`user_Role`,`username`,`password`,`user_Email`,`reg_date`, `realname`) VALUES ('NOMINATOR','nominator','password','nominator@nom.me',NOW(), "Arup Guha");
 
+INSERT INTO `sessions` (`app_deadline`, `nom_init_deadline`, `nom_respond_deadline`, `nom_complete_deadline`, `is_active`) VALUES ('1/1/11', '1/1/12', '1/1/13', '1/1/14', 1);
+INSERT INTO nomination (`session_id`, `nominator_id`, `nominee_name`, `rank`, `nominee_PID`, `nominee_email`, `is_phd`, `is_newly_admitted`, `sent`) VALUES (1, 4,'Fedora',5,'F2345678','fed.dora@reddit.com',1,0,NOW());
 #Generate three default courses
 INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Course_Grade`) VALUES (1, 'Database Systems','A');
 INSERT INTO `ListGradCourse` (`nomination_id`, `Course_Name`, `Course_Grade`) VALUES (1, 'Programming 101','B+');

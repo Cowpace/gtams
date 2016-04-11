@@ -29,7 +29,7 @@ include_once 'includes/db_connect.php';
 			  <td><input type="text" name="nomineeName" required></td></tr>
 
 			  <tr><td><label for="nomineeRank">Nominee rank</label></td>
-			  <td><input type="number" name="nomineeRank" required></td></tr>
+			  <td><input type="number" name="nomineeRank" min="1" max="10" required></td></tr>
 
 			  <tr><td><label for="nomineePID">Nominee PID</label></td>
 			  <td><input type="text" name="nomineePID" required></p></td></tr>
