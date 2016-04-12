@@ -76,9 +76,14 @@ function debug_alert($message) {
 }
 
 function popper($name){
-	?>	<script>
-			window.open(‘google.com’,‘<?php echo $name ?>’,‘menubar=no,width=430,height=360,scrollbars=yes,resizable=yes,toolbar=no’);
-		</script>
+	?>	<html>		
+			<input type='button' value="<?php echo $name ?>" onclick="get()">				
+		</html>
+			<script>
+			function get(){
+			window.open('http://www.google.com','<?php echo $name ?>','height=auto,width=auto,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes');
+			}
+			</script>
 	<?php
 }
 ?>

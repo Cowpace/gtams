@@ -49,8 +49,9 @@ include_once ("header.php");
 						echo "<tr>";
 						echo "<input type='hidden' name='nomination_id' value=".$obj->nomination_id.">";
 						echo "<td>".$obj->realname."</td>";
-						echo "<td><input type='button' value=".$obj->nominee_name." onclick=\"window.open('http://www.google.com','popUpWindow','height=auto,width=auto,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes');\"></td>";
-						
+						echo "<td>";
+						popper($obj->nominee_name);					
+						echo "</td>";
 						echo "<td>".$obj->rank."</td>";
 						if(!$obj->is_newly_admitted){
 							echo "<td>New</td>";
