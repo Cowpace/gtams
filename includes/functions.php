@@ -74,4 +74,11 @@ function debug_alert($message) {
 		</script>
 	<?php
 }
+
+function popper($name){
+	?>	<script>
+			window.open(‘google.com’,‘<?php echo $name ?>’,‘menubar=no,width=430,height=360,scrollbars=yes,resizable=yes,toolbar=no’);
+		</script>
+	<?php
+}
 ?>
