@@ -75,15 +75,31 @@ function debug_alert($message) {
 	<?php
 }
 
-function popper($name){
+function popper($name,$nomid){
+		
 	?>	<html>		
 			<input type='button' value="<?php echo $name ?>" onclick="get()">				
 		</html>
 			<script>
 			function get(){
-			window.open('http://www.google.com','<?php echo $name ?>','height=auto,width=auto,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes');
+			<?php $file = createPage($nomid); ?>
+			window.open('<?php $file ?>','<?php echo $name ?>','height=auto,width=auto,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes');
 			}
 			</script>
 	<?php
+}
+
+function createPage($nomid){
+	$filename = "nomination".$nomid.".php";
+	$fp = fopen("$filename",'x');
+	fwrite($fp, "<?php\n
+					echo ".$nomid.";
+					?>\n
+					<script>\n
+					window.onbeforeunload = function(){
+						<?php unlink(".$filename."); ?>
+					}\n</script>");
+    fclose($fp);
+	return $filename;
 }
 ?>

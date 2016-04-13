@@ -50,7 +50,7 @@ include_once ("header.php");
 						echo "<input type='hidden' name='nomination_id' value=".$obj->nomination_id.">";
 						echo "<td>".$obj->realname."</td>";
 						echo "<td>";
-						popper($obj->nominee_name);					
+						popper($obj->nominee_name,$obj->nomination_id);					
 						echo "</td>";
 						echo "<td>".$obj->rank."</td>";
 						if(!$obj->is_newly_admitted){
@@ -82,7 +82,8 @@ include_once ("header.php");
 							echo "<td><input type='submit' value='Score Nominee' /></td>";
 						}
 						else{
-							echo "<td>Nominee already scored</td>";
+							$obj3 = $mysqli->query("SELECT Comments FROM score WHERE user_ID = ".$_SESSION['user_ID']." AND nomination_id = ".$obj->nomination_id)->fetch_object()->Comments;
+							echo "<td>".$obj3."</td>";
 							echo "<td>Nominee already scored</td>";
 						}
 						
