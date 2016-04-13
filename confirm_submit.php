@@ -6,6 +6,7 @@ if (!isset($_SESSION)){
 	session_start();
 }
 
+
 $stmt = $mysqli->prepare("
 	UPDATE nomination
 	SET completed = NOW()
@@ -21,5 +22,5 @@ $stmt->execute();
 if (isset($_SESSION['TEMP_NOM_ID'])){
 	unset($_SESSION['TEMP_NOM_ID']);
 }
-alert("Nomination Completed!");
+header('Location: nominator.php');
 ?>

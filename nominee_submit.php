@@ -3,15 +3,24 @@ include_once 'includes/db_connect.php';
 include_once 'includes/functions.php';
 session_start();
 
+$obj = $mysqli->query("SELECT session_id, nom_respond_deadline FROM sessions WHERE is_active = 1")->fetch_object();
+$session_id = $obj->session_id;
+$deadline = $obj->nom_respond_deadline;
+
+if (strcmp(date("Y.m.d"), $deadline) > 0){
+	alert("Deadline has passed to respond to a nomination");
+	exit;
+}
+
 $nominatorName = filter_var($_POST['nominatorName'], FILTER_SANITIZE_STRING);
 $PID = filter_var($_POST['nomineePID'], FILTER_SANITIZE_STRING);
 
 $stmt = $mysqli->prepare("
 	SELECT n.nomination_id, n.replied
 	FROM nomination n, users u
-	WHERE u.realname = ? and n.nominee_PID = ? and u.user_ID = n.nominator_id"
+	WHERE u.realname = ? and n.nominee_PID = ? and u.user_ID = n.nominator_id and n.session_id = ?"
 );
-$stmt->bind_param('ss', $nominatorName, $PID);
+$stmt->bind_param('ssi', $nominatorName, $PID, $session_id);
 $stmt->execute();
 $stmt->bind_result($nom_id, $reply_date);
 $stmt->fetch();

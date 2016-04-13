@@ -20,8 +20,13 @@ $nomineeRank = filter_var($_POST['nomineeRank']);
 $sent_time = date("Y-m-d H:i:s");
 
 
-
-$temp = $mysqli->query("SELECT session_id FROM sessions WHERE is_active = 1")->fetch_object()->session_id;
+$obj = $mysqli->query("SELECT session_id, nom_init_deadline FROM sessions WHERE is_active = 1")->fetch_object();
+$temp = $obj->session_id;
+$deadline = $obj->nom_init_deadline;
+if (strcmp(date("Y.m.d"), $deadline) > 0){
+	alert("Deadline has passed to initiate a nomination");
+	exit;
+}
 
 $nominator_id = $_SESSION['user_ID'];
 if (!($nominator_id > 0)){

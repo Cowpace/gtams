@@ -64,7 +64,8 @@ include_once 'includes/db_connect.php';
 					$stmt = $mysqli->prepare("
 						SELECT n.nomination_id, n.nominee_name
 						FROM nomination n, users u
-						WHERE u.user_ID = n.nominator_id and u.user_ID = ? and n.replied IS NOT NULL and n.completed IS NULL
+						WHERE u.user_ID = n.nominator_id and u.user_ID = ? and n.replied IS NOT NULL and n.completed IS NULL and n.session_id = 
+							(SELECT session_id FROM sessions WHERE is_active = 1)
 					");
 					$id = $_SESSION['user_ID'];
 					$v = $stmt->bind_param("i", $id);

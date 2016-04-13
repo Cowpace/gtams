@@ -8,10 +8,10 @@ if(!isset($_SESSION)) {
 
 $members = $_POST['members'];
 $chair_id = $_POST['chair'];
-$app_deadline = filter_var($_POST['app_deadline'], FILTER_SANITIZE_STRING);
-$initiateDate = filter_var($_POST['initiateDate'], FILTER_SANITIZE_STRING);
-$nomineeDate = filter_var($_POST['nomineeDate'], FILTER_SANITIZE_STRING);
-$nominateDate = filter_var($_POST['nominateDate'], FILTER_SANITIZE_STRING);
+$app_deadline = str_replace("-", ".", filter_var($_POST['app_deadline'], FILTER_SANITIZE_STRING));
+$initiateDate = str_replace("-", ".", filter_var($_POST['initiateDate'], FILTER_SANITIZE_STRING));
+$nomineeDate = str_replace("-", ".", filter_var($_POST['nomineeDate'], FILTER_SANITIZE_STRING));
+$nominateDate = str_replace("-", ".", filter_var($_POST['nominateDate'], FILTER_SANITIZE_STRING));
 $temp = 1;
 
 $mysqli->query("UPDATE sessions SET is_active = 0 WHERE is_active = 1"); //disable all active sessions

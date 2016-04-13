@@ -9,6 +9,18 @@ if (!isset($_SESSION)){
 }
 if (!isset($_POST['nominees'])){
 	alert("No Nominee selected");
+	exit;
+}
+
+$deadline = $mysqli->query("
+	SELECT nom_complete_deadline 
+	FROM sessions 
+	WHERE is_active = 1
+")->fetch_object()->nom_complete_deadline;
+
+if (strcmp(date("Y.m.d"), $deadline) > 0){
+	alert("Deadline has passed to confirm to a nomination");
+	exit;
 }
 $nom_id = $_POST['nominees'];
 
