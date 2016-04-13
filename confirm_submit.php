@@ -21,5 +21,5 @@ $stmt->execute();
 if (isset($_SESSION['TEMP_NOM_ID'])){
 	unset($_SESSION['TEMP_NOM_ID']);
 }
-header('Location: nominator.php');
+alert("Nomination Completed!");
 ?>

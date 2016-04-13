@@ -19,6 +19,8 @@ $phdNew = filter_var($to_binary[$_POST['phdNew']]);
 $nomineeRank = filter_var($_POST['nomineeRank']);
 $sent_time = date("Y-m-d H:i:s");
 
+
+
 $temp = $mysqli->query("SELECT session_id FROM sessions WHERE is_active = 1")->fetch_object()->session_id;
 
 $nominator_id = $_SESSION['user_ID'];
@@ -26,6 +28,15 @@ if (!($nominator_id > 0)){
 	alert("failed to grab user_ID (".$nominator_id.") of user logged in");
 	exit();
 }
+
+//if the admin did not specify a name, update the database
+$stmt = $mysqli->prepare("
+		UPDATE users
+		SET realname = ?
+		WHERE user_ID = ? and realname IS NULL"
+	);
+$stmt->bind_param('si', $nominatorName, $nominator_id);
+$stmt->execute();
 
 #Email function
 //Recipient(s)

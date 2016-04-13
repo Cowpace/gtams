@@ -7,7 +7,9 @@ include_once ("header.php");
 if (!isset($_SESSION)){
 	session_start();
 }
-
+if (!isset($_POST['nominees'])){
+	alert("No Nominee selected");
+}
 $nom_id = $_POST['nominees'];
 
 $stmt = $mysqli->prepare("

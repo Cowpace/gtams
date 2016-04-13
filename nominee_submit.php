@@ -113,6 +113,23 @@ for($i=0; $i < count($pub_titles); $i++){
 if ($mysqli->errno){
 	alert("Query failed with error code = " . $mysqli->errno);
 } else {
-	alert("Reply Successful");
+	$stmt = $mysqli->prepare("
+		SELECT u.user_Email
+		FROM nomination n, users u
+		WHERE n.nomination_id = ? and u.user_ID = n.nominator_id"
+	);
+	$stmt->bind_param('i', $nom_id);
+	$stmt->execute();
+	$stmt->bind_result($email);
+	$stmt->fetch();
+	
+	$subject = "Confirm Nominee";
+	$headers = 'From: GTAMS <gtams@cop4710.com>' . "\r\n";
+	$body_message = "Please log into your GTAMS account and confirm the nominee information";
+	$mail_status = mail($email, $subject, $body_message, $headers);
+	if ($mail_status)
+		alert("Reply Successful");
+	else
+		alert("Insert Success, Email Failed to send");
 }
 ?>

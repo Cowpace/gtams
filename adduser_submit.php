@@ -22,6 +22,8 @@ else
 	$email = filter_var($_POST['email'], FILTER_SANITIZE_STRING);
 	$role = filter_var($_POST['selection'], FILTER_SANITIZE_STRING);
 	$name = filter_var($_POST['Name'], FILTER_SANITIZE_STRING);
+	if ($name == "")
+		$name = NULL;
 
 	$reg_date = date("Y-m-d H:i:s");
 	$stmt = $mysqli->prepare("INSERT INTO users (username, password, user_Email, user_Role, reg_date, realname) VALUES (?,?,?,?,?,?)");
