@@ -113,7 +113,7 @@ INSERT INTO `users` (`user_Role`,`username`,`password`,`user_Email`,`reg_date`, 
 INSERT INTO `users` (`user_Role`,`username`,`password`,`user_Email`,`reg_date`, `realname`) VALUES ('NOMINATOR','nominator','password','nominator@nom.me',NOW(), "Arup Guha");
 
 #Generate session
-INSERT INTO `sessions` (`app_deadline`, `nom_init_deadline`, `nom_respond_deadline`, `nom_complete_deadline`, `is_active`) VALUES ('1/1/11', '1/1/12', '1/1/13', '1/1/14', 1);
+INSERT INTO `sessions` (`app_deadline`, `nom_init_deadline`, `nom_respond_deadline`, `nom_complete_deadline`, `is_active`) VALUES ('2099.1.1', '2099.1.1', '2099.1.1', '2099.1.1', 1);
 
 #Generate nomination
 INSERT INTO nomination (`session_id`, `nominator_id`, `nominee_name`, `rank`, `nominee_PID`, `nominee_email`, `is_phd`, `is_newly_admitted`, `sent`) VALUES (1, 5,'Fedora',5,'F2345678','fed.dora@reddit.com',1,0,NOW());

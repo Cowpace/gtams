@@ -5,8 +5,10 @@ include_once 'includes/functions.php';
 if(!isset($_SESSION)) { 
 	session_start(); 
 }
-
-$members = $_POST['members'];
+if (isset($_POST['members']))
+	$members = $_POST['members'];
+else
+	$members = array();
 $chair_id = $_POST['chair'];
 $app_deadline = str_replace("-", ".", filter_var($_POST['app_deadline'], FILTER_SANITIZE_STRING));
 $initiateDate = str_replace("-", ".", filter_var($_POST['initiateDate'], FILTER_SANITIZE_STRING));

@@ -87,19 +87,19 @@ include_once("header.php"); ?>
 					<!--User name and password for each selected members-->
 					<tr>
 						<td><label for="app_deadline">Choose a deadline for application:</label></td>
-						<td><input type="date" name="app_deadline"></td>
+						<td><input type="date" name="app_deadline" required></td>
 					</tr>
 					<tr>
 						<td><label for="initiateDate">Choose a deadline for initiation:</label></td>
-						<td><input type="date" name="initiateDate"></td>
+						<td><input type="date" name="initiateDate" required></td>
 					</tr>
 					<tr>
 						<td><label for="nomineeDate">Choose a deadline for nominee response:</label></td>
-						<td><input type="date" name="nomineeDate"></td>
+						<td><input type="date" name="nomineeDate" required></td>
 					</tr>
 					<tr>
 						<td><label for="nominateDate">Choose a deadline for nomination:</label></td>
-						<td><input type="date" name="nominateDate"></td>
+						<td><input type="date" name="nominateDate" required></td>
 					</tr>
 					<tr>
 						<td>
