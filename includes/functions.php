@@ -76,36 +76,105 @@ function debug_alert($message) {
 	<?php
 }
 
-function popper($name,$nomid){
-		
-	?>	<html>		
-			<input type='button' value="<?php echo $name ?>" onclick="get()">				
-		</html>
+function popper($name,$nomid){		
+	?>	
 			<script>
-			function get(){
-			<?php $file = createPage($nomid); ?>
-			window.open('<?php $file ?>','<?php echo $name ?>','height=auto,width=auto,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes');
+			function get(){	
+			window.open('<?php echo 'nomination'.$nomid.'.php' ?>','<?php echo $name ?>','height=auto,width=auto,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes');
 			}
 			</script>
 	<?php
 }
 
-function createPage($nomid){
+function createPage($name,$nomid,$mysqli){
 	$filename = "nomination".$nomid.".php";
-	$fp = fopen("$filename",'x');
-	fwrite($fp, "<?php\n
-					echo ".$nomid.";
-					?>\n
-					<script>\n
-					window.onbeforeunload = function(){
-						<?php unlink(".$filename."); ?>
-					}\n</script>");
-    fclose($fp);
+	$content = "<?php
+include_once 'includes/db_connect.php';
+
+if(!isset(\$_SESSION)) { 
+	session_start(); 
+}
+\$page_title = '".$name."';
+include_once ('header.php');
+\$file = '".$filename."';
+?>
+
+<html>
+	<head>
+	     <link rel='stylesheet' href='styles/main.css' />
+	</head>
+	<div id='page'>
+	<br><br>
+	<body><center>
+			<?php
+				\$result = \$mysqli->query('SELECT * FROM nomination WHERE nomination_id = ".$nomid."')->fetch_object();
+				\$result2 = \$mysqli->query('SELECT * FROM ListGradCourse WHERE nomination_id = ".$nomid."');
+				\$result3 = \$mysqli->query('SELECT * FROM ListPublication WHERE nomination_id = ".$nomid."');
+			?>
+			<br>
+			<table>
+			<caption>".$name."'s Info</caption>
+			<tr><td>Nominee Name</td><td><?php echo \$result->nominee_name; ?></td></tr>
+			<tr><td>Session ID</td><td><?php echo \$result->session_id; ?></td></tr>
+			<tr><td>Nominee PID</td><td><?php echo \$result->nominee_PID; ?></td></tr>
+			<tr><td>Nominee Email</td><td><?php echo \$result->nominee_email; ?></td></tr>
+			<tr><td>Phone Number</td><td><?php echo \$result->phone_number; ?></td></tr>
+			<tr><td>GPA</td><td><?php echo \$result->GPA; ?></td></tr>
+			<tr><td>Is a PHD student</td><td><?php echo \$result->is_phd; ?></td></tr>
+			<tr><td>Advisor</td><td><?php echo \$result->nominee_advisor; ?></td></tr>
+			<tr><td>Graduate Semesters</td><td><?php echo \$result->graduate_semesters; ?></td></tr>
+			<tr><td>SPEAK Test Status</td><td><?php echo \$result->SPEAK_test; ?></td></tr>
+			<tr><td>GTA semesters</td><td><?php echo \$result->GTA_semesters; ?></td></tr>
+			<?php if(\$result->completed){
+			?>	<tr><td>Nomination Completed</td></tr>
+			<?php } elseif(\$result->replied) {
+			?>	<tr><td>Waiting for nomination confirmation</td></tr>
+			<?php } else {
+			?>	<tr><td>Nominee messaged</td></tr>
+			<?php } ?>
+			</table>
+			<table>
+			<caption>Graduate Courses</caption>
+			<th>Course Name</th>
+			<th>Course Grade</th>
+			<?php
+				while(\$obj = \$result2->fetch_object()){ ?>
+					<tr><td><?php echo \$obj->Course_Name; ?></td>
+					<td><?php echo \$obj->Course_Grade; ?></td></tr>
+				<?php } ?>			
+			</table>
+			<table>
+			<caption>Publications</caption>
+			<th>Publication Name</th>
+			<th>Publication Citation</th>
+			<?php
+				while(\$obj = \$result3->fetch_object()){ ?>
+					<tr><td><?php echo \$obj->Publication_Name; ?></td>
+					<td><?php echo \$obj->Publication_Citation; ?></td></tr>
+			<?php } ?>				
+			</table>				
+	</center></body>
+</html>
+";
+    file_put_contents($filename, $content);
 	return $filename;
 }
 
 function oldGCTable($sessionID,$mysqli){
-		?><html>
+		?><script>
+	function popup(mylink, windowname)
+	{
+		if (! window.focus)return true;
+		var href;
+		if (typeof(mylink) == 'string')
+		   href=mylink;
+		else
+		   href=mylink.href;
+		window.open(href, windowname, 'width=auto,height=auto,scrollbars=yes');
+		return false;
+	}
+	
+</script><html>
 		<table border="1" style="width:100%">
 		  <center>
 			<tr>
@@ -114,13 +183,7 @@ function oldGCTable($sessionID,$mysqli){
 				<th>Ranking</th>
 				<th>New or Existing</th>
 			<?php 
-				$result = $mysqli->query(
-				"SELECT u.realname 
-				FROM users u
-				WHERE u.user_Role = 'GCMEMBER' and
-				EXISTS (SELECT * FROM session_users WHERE session_id = " . $sessionID . " and user_id = u.user_ID)
-				ORDER BY u.realname"
-				);
+				$result = $mysqli->query("SELECT realname FROM users WHERE user_Role = 'GCMEMBER' ORDER BY realname");
 				$i = 0;
 				
 				while ($obj = $result->fetch_object()){
@@ -131,11 +194,9 @@ function oldGCTable($sessionID,$mysqli){
 				<th>Average</th>
 				<th>Comment</th>	
 				<th>Submit Score</th>
-				<th>Responce?</th>
-				<th>Confirmed?</th>
 			</tr>
 			<?php
-				$result = $mysqli->query("SELECT u.realname, n.session_id, n.nominee_name, n.rank, n.is_newly_admitted, n.nomination_id, n.replied, n.completed
+				$result = $mysqli->query("SELECT u.realname, n.session_id, n.nominee_name, n.rank, n.is_newly_admitted, n.nomination_id
 									FROM nomination n, users u
 									WHERE u.user_ID = n.nominator_id
 									ORDER BY realname");
@@ -146,7 +207,7 @@ function oldGCTable($sessionID,$mysqli){
 						echo "<tr>";
 						echo "<input type='hidden' name='nomination_id' value=".$obj->nomination_id.">";
 						echo "<td>".$obj->realname."</td>";
-						echo "<td>".$obj->nominee_name."</td>";								
+						echo "<td><A HREF='".createPage($obj->nominee_name,$obj->nomination_id,$mysqli)."' onClick='return popup(this,true)';>".$obj->nominee_name."</A></td>";						
 						echo "<td>".$obj->rank."</td>";
 						if(!$obj->is_newly_admitted){
 							echo "<td>New</td>";
@@ -154,12 +215,7 @@ function oldGCTable($sessionID,$mysqli){
 						else{
 							echo "<td>Existing</td>";
 						}
-						$result2 = $mysqli->query("
-						SELECT u.user_ID, u.realname 
-						FROM users u
-						WHERE u.user_Role = 'GCMEMBER' and
-						EXISTS(SELECT * FROM session_users WHERE session_id = " . $sessionID . " and user_id = u.user_ID)
-						ORDER BY u.realname");
+						$result2 = $mysqli->query("SELECT user_ID, realname FROM users WHERE user_Role = 'GCMEMBER' ORDER BY realname");
 						$average = 0;
 						$count = 0;
 						$flag = false;
@@ -169,25 +225,10 @@ function oldGCTable($sessionID,$mysqli){
 							$average += $obj3;
 							echo "<td>".$obj3."</td>";	
 						}
-						if ($count != 0)
-							echo "<td>".$average/$count."</td>";
-						else
-							echo "<td>Undefined</td>";
-						$obj3 = $mysqli->query("SELECT Comments FROM score WHERE user_ID = ".$_SESSION['user_ID']." AND nomination_id = ".$obj->nomination_id)->fetch_object();
-						if ($obj3)
-							$obj3 = $obj3->Comments;
-						else
-							$obj3 = "";
+						echo "<td>".$average/$count."</td>";
+						$obj3 = $mysqli->query("SELECT Comments FROM score WHERE user_ID = ".$_SESSION['user_ID']." AND nomination_id = ".$obj->nomination_id)->fetch_object()->Comments;
 						echo "<td>".$obj3."</td>";
-						echo "<td>Nominee already scored</td>";
-						if ($obj->replied != NULL)
-							echo "<td>Yes</td>";
-						else
-							echo "<td>No</td>";
-						if ($obj->completed != NULL)
-							echo "<td>Yes</td>";
-						else
-							echo "<td>No</td>";
+						echo "<td>Nominee already scored</td>";						
 					echo "</tr>";
 					echo "</form>";
 					}
