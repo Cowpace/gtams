@@ -110,6 +110,7 @@ include_once ('header.php');
 				\$result = \$mysqli->query('SELECT * FROM nomination WHERE nomination_id = ".$nomid."')->fetch_object();
 				\$result2 = \$mysqli->query('SELECT * FROM ListGradCourse WHERE nomination_id = ".$nomid."');
 				\$result3 = \$mysqli->query('SELECT * FROM ListPublication WHERE nomination_id = ".$nomid."');
+				\$result4 = \$mysqli->query('SELECT * FROM ListAdvisor WHERE nomination_id = ".$nomid."' );
 			?>
 			<br>
 			<table>
@@ -121,7 +122,7 @@ include_once ('header.php');
 			<tr><td>Phone Number</td><td><?php echo \$result->phone_number; ?></td></tr>
 			<tr><td>GPA</td><td><?php echo \$result->GPA; ?></td></tr>
 			<tr><td>Is a PHD student</td><td><?php echo \$result->is_phd; ?></td></tr>
-			<tr><td>Advisor</td><td><?php echo \$result->nominee_advisor; ?></td></tr>
+			<tr><td>Current Advisor</td><td><?php echo \$result->nominee_advisor; ?></td></tr>
 			<tr><td>Graduate Semesters</td><td><?php echo \$result->graduate_semesters; ?></td></tr>
 			<tr><td>SPEAK Test Status</td><td><?php echo \$result->SPEAK_test; ?></td></tr>
 			<tr><td>GTA semesters</td><td><?php echo \$result->GTA_semesters; ?></td></tr>
@@ -152,8 +153,21 @@ include_once ('header.php');
 					<tr><td><?php echo \$obj->Publication_Name; ?></td>
 					<td><?php echo \$obj->Publication_Citation; ?></td></tr>
 			<?php } ?>				
-			</table>				
+			</table>		
+			<table>
+			<caption>Past Advisors</caption>
+			<th>Advisor Name</th>
+			<th>Start Date</th>
+			<th>End Date</th>
+			<?php
+				while(\$obj = \$result4->fetch_object()){ ?>
+					<tr><td><?php echo \$obj->advisor_name; ?></td>
+					<td><?php echo \$obj->startdate; ?></td>
+					<td><?php echo \$obj->enddate; ?></td></tr>
+			<?php } ?>				
+			</table>						
 	</center></body>
+	<br>
 </html>
 ";
     file_put_contents($filename, $content);
@@ -200,7 +214,7 @@ function oldGCTable($sessionID,$mysqli){
 				<th>Average</th>
 				<th>Comment</th>	
 				<th>Submit Score</th>
-				<th>Responce?</th>
+				<th>Response?</th>
  				<th>Confirmed?</th>
 			</tr>
 			<?php
@@ -227,7 +241,7 @@ function oldGCTable($sessionID,$mysqli){
  						SELECT u.user_ID, u.realname 
  						FROM users u
  						WHERE u.user_Role = 'GCMEMBER' and
- 						EXISTS(SELECT * FROM session_users WHERE session_id = " . $sessionID . " and user_id = u.user_ID)
+ 						EXISTS(SELECT * FROM session_users WHERE session_id = ". $sessionID ." and user_id = u.user_ID)
  						ORDER BY u.realname");
 						$average = 0;
 						$count = 0;
