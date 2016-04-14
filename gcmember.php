@@ -14,11 +14,11 @@ include_once ("header.php");
 	</head>
 	<div id="page">
 	<br><br>
-	<title>Nominee Info</title>
+	
 	<section class="gcmemberform cf">	
-		<body>
-		<center>		
+		<body>				
 		  <table border="1" style="width:100%">
+		  <center>
 			<tr>
 				<th>Nominator name</th>
 				<th>Nominee name</th>
@@ -38,13 +38,14 @@ include_once ("header.php");
 				<th>Submit Score</th>
 			</tr>
 			<?php
-				$result = $mysqli->query("SELECT u.realname, n.session_id, n.nominee_name, n.rank, n.is_newly_admitted, n.nomination_id
-									FROM nomination n, users u
-									WHERE u.user_ID = n.nominator_id
+				$result = $mysqli->query("SELECT u.realname, s.is_active, n.nominee_name, n.rank, n.is_newly_admitted, n.nomination_id
+									FROM nomination n, users u, sessions s
+									WHERE u.user_ID = n.nominator_id AND
+									n.session_id = s.session_id
 									ORDER BY realname");
 				
 				while($obj = $result->fetch_object()){
-					if($obj->session_id == 1){
+					if($obj->is_active == 1){
 						echo "<form action='gcmember_submit.php' method='post'>";
 						echo "<tr>";
 						echo "<input type='hidden' name='nomination_id' value=".$obj->nomination_id.">";
@@ -92,8 +93,9 @@ include_once ("header.php");
 					}
 				}
 			?>
-		  </table>		  		  
 		  </center>
+		  </table>		  		  
+		  
 		</body>
 	</section>
 	</div>
