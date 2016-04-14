@@ -151,8 +151,6 @@ function oldGCTable($sessionID,$mysqli){
 						$count = 0;
 						$flag = false;
 						while($obj2 = $result2->fetch_object()){
-							$obj2->user_ID;
-							$obj->nomination_id;
 							$obj3 = $mysqli->query("SELECT Score FROM score WHERE user_ID = ".$obj2->user_ID." AND nomination_id = ".$obj->nomination_id)->fetch_object()->Score;
 							$count++;
 							$average += $obj3;
