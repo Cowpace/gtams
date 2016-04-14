@@ -25,6 +25,7 @@ Changes required in php.ini:
 	sendmail_from = your-gmail-id@gmail.com	(tverb21@gmail.com)
 	sendmail_path = "\"C:\wamp\bin\sendmail\sendmail.exe\" -t" (This is the default path for wamp, may be "wamp64 or wamp32" though)
 
+**Note: Since we are not hosting our server online, the link through the mail will only work on a local machine hosting the server.**
 
 To run the WAMP server run the Wampserver.exe and click on the icon in your toolbar to start services.
 
@@ -135,7 +136,8 @@ GTAMS/includes directory
 		alert - formal alert to create popup message
 		debug_alert - informal alert to create popup message
 		popper - pops up a new window to display a page
-		createPage - creates a page to display nominee info		
+		createPage - creates a page to display nominee info	
+		oldGCTable - Generates a GC Member table using a session_id
 		
 "process_login.php"
 	Sets up login functionality and dictates which page to load to based on user
