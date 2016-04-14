@@ -23,7 +23,7 @@ Changes required in php.ini:
 	SMTP=smtp.gmail.com
 	smtp_port=587
 	sendmail_from = your-gmail-id@gmail.com	(tverb21@gmail.com)
-	sendmail_path = "\"C:\wamp\bin\sendmail\sendmail.exe\" -t" (This is the default path for wamp, may be "wamp64 or wamp32" though)
+	sendmail_path = "\"C:\wampxx\bin\sendmail\sendmail.exe\" -t" (This is the default path for wamp, xx being "64 or "32")
 
 **Note: Since we are not hosting our server online, the link through the mail will only work on a local machine hosting the server.**
 
