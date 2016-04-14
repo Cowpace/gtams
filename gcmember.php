@@ -7,6 +7,10 @@ if(!isset($_SESSION)) {
 }
 $page_title = "GC Member";
 include_once ("header.php");
+
+if (!isset($_SESSION['GC_SESSION_ID']))
+	$_SESSION['GC_SESSION_ID'] = $mysqli->query("SELECT session_id FROM sessions WHERE is_active = 1")->fetch_object()->session_id;
+
 ?>
 <html>
 	<head>
@@ -14,87 +18,34 @@ include_once ("header.php");
 	</head>
 	<div id="page">
 	<br><br>
-	
+	<form name="sessions" action= "reload_session.php" method="post" accept-charset="utf-8">
+		<body>
+			<select name = "session">
+				<?php 
+					$stmt = $mysqli->prepare("
+						SELECT session_id
+						FROM sessions
+					");
+					$stmt->execute();
+					$stmt->bind_result($s);
+					
+					while ($stmt->fetch()){
+						$str = '';
+						if ($s == $_SESSION['GC_SESSION_ID'])
+							$str = 'selected = "selected"';
+						
+						
+						echo "<option value=\"".$s."\" " . $str . " >Session ".$s."</option>";
+					}
+				?>
+			</select>
+			<input type="submit" value="View Data" >
+			
+		</body>
+	</form>
 	<section class="gcmemberform cf">	
 		<body>				
-		  <table border="1" style="width:100%">
-		  <center>
-			<tr>
-				<th>Nominator name</th>
-				<th>Nominee name</th>
-				<th>Ranking</th>
-				<th>New or Existing</th>
-			<?php 
-				$result = $mysqli->query("SELECT realname FROM users WHERE user_Role = 'GCMEMBER' ORDER BY realname");
-				$i = 0;
-				
-				while ($obj = $result->fetch_object()){
-					echo "<th>".$obj->realname."</th>";
-					$i+=1;
-				}
-			?>
-				<th>Average</th>
-				<th>Comment</th>	
-				<th>Submit Score</th>
-			</tr>
-			<?php
-				$result = $mysqli->query("SELECT u.realname, s.is_active, n.nominee_name, n.rank, n.is_newly_admitted, n.nomination_id
-									FROM nomination n, users u, sessions s
-									WHERE u.user_ID = n.nominator_id AND
-									n.session_id = s.session_id
-									ORDER BY realname");
-				
-				while($obj = $result->fetch_object()){
-					if($obj->is_active == 1){
-						echo "<form action='gcmember_submit.php' method='post'>";
-						echo "<tr>";
-						echo "<input type='hidden' name='nomination_id' value=".$obj->nomination_id.">";
-						echo "<td>".$obj->realname."</td>";
-						echo "<td>";
-						popper($obj->nominee_name,$obj->nomination_id);					
-						echo "</td>";
-						echo "<td>".$obj->rank."</td>";
-						if(!$obj->is_newly_admitted){
-							echo "<td>New</td>";
-						}
-						else{
-							echo "<td>Existing</td>";
-						}
-						$result2 = $mysqli->query("SELECT user_ID, realname FROM users WHERE user_Role = 'GCMEMBER' ORDER BY realname");
-						$average = 0;
-						$count = 0;
-						$flag = false;
-						while($obj2 = $result2->fetch_object()){
-							$obj3 = $mysqli->query("SELECT Score FROM score WHERE user_ID = ".$obj2->user_ID." AND nomination_id = ".$obj->nomination_id)->fetch_object()->Score;
-							if($_SESSION['user_ID'] == $obj2->user_ID && $obj3 == 0){
-								echo "<td><input type='number' id='score' name='score' min='1' max='100'></td>";
-								$flag = true;
-							}
-							else{
-								$count++;
-								$average += $obj3;
-								echo "<td>".$obj3."</td>";	
-							}
-	
-						}
-						echo "<td>".$average/$count."</td>";						
-						if($flag){
-							echo "<td><input type='text' id='comment' name='comment'></td>";
-							echo "<td><input type='submit' value='Score Nominee' /></td>";
-						}
-						else{
-							$obj3 = $mysqli->query("SELECT Comments FROM score WHERE user_ID = ".$_SESSION['user_ID']." AND nomination_id = ".$obj->nomination_id)->fetch_object()->Comments;
-							echo "<td>".$obj3."</td>";
-							echo "<td>Nominee already scored</td>";
-						}
-						
-					echo "</tr>";
-					echo "</form>";
-					}
-				}
-			?>
-		  </center>
-		  </table>		  		  
+		  <?php oldGCTable($_SESSION['GC_SESSION_ID'], $mysqli); ?>		  		  
 		  
 		</body>
 	</section>

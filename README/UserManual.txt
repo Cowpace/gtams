@@ -119,6 +119,9 @@ GTAMS main directory:
 	Adds a session to the sessions table based on Admin input and sets the session to be active
 	and deactivates the previous session
 
+"reload_session.php"
+	Simple script used to reset a session variable
+
 GTAMS/includes directory
 
 "db_connect.php"
