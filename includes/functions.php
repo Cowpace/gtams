@@ -1,5 +1,6 @@
 <?php
 include_once 'psl-config.php';
+
 //Secure login
 function login($username, $password, $mysqli) {  
     if ($stmt = $mysqli->prepare("SELECT user_id, password 
@@ -103,7 +104,7 @@ function createPage($nomid){
 	return $filename;
 }
 
-function oldGCTable($sessionID){
+function oldGCTable($sessionID,$mysqli){
 		?><html>
 		<table border="1" style="width:100%">
 		  <center>
@@ -137,9 +138,7 @@ function oldGCTable($sessionID){
 						echo "<tr>";
 						echo "<input type='hidden' name='nomination_id' value=".$obj->nomination_id.">";
 						echo "<td>".$obj->realname."</td>";
-						echo "<td>";
-						popper($obj->nominee_name,$obj->nomination_id);					
-						echo "</td>";
+						echo "<td>".$obj->nominee_name."</td>";								
 						echo "<td>".$obj->rank."</td>";
 						if(!$obj->is_newly_admitted){
 							echo "<td>New</td>";
@@ -153,28 +152,14 @@ function oldGCTable($sessionID){
 						$flag = false;
 						while($obj2 = $result2->fetch_object()){
 							$obj3 = $mysqli->query("SELECT Score FROM score WHERE user_ID = ".$obj2->user_ID." AND nomination_id = ".$obj->nomination_id)->fetch_object()->Score;
-							if($_SESSION['user_ID'] == $obj2->user_ID && $obj3 == 0){
-								echo "<td><input type='number' id='score' name='score' min='1' max='100'></td>";
-								$flag = true;
-							}
-							else{
-								$count++;
-								$average += $obj3;
-								echo "<td>".$obj3."</td>";	
-							}
-	
+							$count++;
+							$average += $obj3;
+							echo "<td>".$obj3."</td>";	
 						}
-						echo "<td>".$average/$count."</td>";						
-						if($flag){
-							echo "<td><input type='text' id='comment' name='comment'></td>";
-							echo "<td><input type='submit' value='Score Nominee' /></td>";
-						}
-						else{
-							$obj3 = $mysqli->query("SELECT Comments FROM score WHERE user_ID = ".$_SESSION['user_ID']." AND nomination_id = ".$obj->nomination_id)->fetch_object()->Comments;
-							echo "<td>".$obj3."</td>";
-							echo "<td>Nominee already scored</td>";
-						}
-						
+						echo "<td>".$average/$count."</td>";
+						$obj3 = $mysqli->query("SELECT Comments FROM score WHERE user_ID = ".$_SESSION['user_ID']." AND nomination_id = ".$obj->nomination_id)->fetch_object()->Comments;
+						echo "<td>".$obj3."</td>";
+						echo "<td>Nominee already scored</td>";						
 					echo "</tr>";
 					echo "</form>";
 					}
