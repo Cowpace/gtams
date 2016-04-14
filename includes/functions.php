@@ -114,7 +114,13 @@ function oldGCTable($sessionID,$mysqli){
 				<th>Ranking</th>
 				<th>New or Existing</th>
 			<?php 
-				$result = $mysqli->query("SELECT realname FROM users WHERE user_Role = 'GCMEMBER' ORDER BY realname");
+				$result = $mysqli->query(
+				"SELECT u.realname 
+				FROM users u
+				WHERE u.user_Role = 'GCMEMBER' and
+				EXISTS (SELECT * FROM session_users WHERE session_id = " . $sessionID . " and user_id = u.user_ID)
+				ORDER BY u.realname"
+				);
 				$i = 0;
 				
 				while ($obj = $result->fetch_object()){
@@ -125,9 +131,11 @@ function oldGCTable($sessionID,$mysqli){
 				<th>Average</th>
 				<th>Comment</th>	
 				<th>Submit Score</th>
+				<th>Responce?</th>
+				<th>Confirmed?</th>
 			</tr>
 			<?php
-				$result = $mysqli->query("SELECT u.realname, n.session_id, n.nominee_name, n.rank, n.is_newly_admitted, n.nomination_id
+				$result = $mysqli->query("SELECT u.realname, n.session_id, n.nominee_name, n.rank, n.is_newly_admitted, n.nomination_id, n.replied, n.completed
 									FROM nomination n, users u
 									WHERE u.user_ID = n.nominator_id
 									ORDER BY realname");
@@ -146,7 +154,12 @@ function oldGCTable($sessionID,$mysqli){
 						else{
 							echo "<td>Existing</td>";
 						}
-						$result2 = $mysqli->query("SELECT user_ID, realname FROM users WHERE user_Role = 'GCMEMBER' ORDER BY realname");
+						$result2 = $mysqli->query("
+						SELECT u.user_ID, u.realname 
+						FROM users u
+						WHERE u.user_Role = 'GCMEMBER' and
+						EXISTS(SELECT * FROM session_users WHERE session_id = " . $sessionID . " and user_id = u.user_ID)
+						ORDER BY u.realname");
 						$average = 0;
 						$count = 0;
 						$flag = false;
@@ -156,10 +169,25 @@ function oldGCTable($sessionID,$mysqli){
 							$average += $obj3;
 							echo "<td>".$obj3."</td>";	
 						}
-						echo "<td>".$average/$count."</td>";
-						$obj3 = $mysqli->query("SELECT Comments FROM score WHERE user_ID = ".$_SESSION['user_ID']." AND nomination_id = ".$obj->nomination_id)->fetch_object()->Comments;
+						if ($count != 0)
+							echo "<td>".$average/$count."</td>";
+						else
+							echo "<td>Undefined</td>";
+						$obj3 = $mysqli->query("SELECT Comments FROM score WHERE user_ID = ".$_SESSION['user_ID']." AND nomination_id = ".$obj->nomination_id)->fetch_object();
+						if ($obj3)
+							$obj3 = $ob3->Comments;
+						else
+							$obj3 = "";
 						echo "<td>".$obj3."</td>";
-						echo "<td>Nominee already scored</td>";						
+						echo "<td>Nominee already scored</td>";
+						if ($obj->replied != NULL)
+							echo "<td>Yes</td>";
+						else
+							echo "<td>No</td>";
+						if ($obj->completed != NULL)
+							echo "<td>Yes</td>";
+						else
+							echo "<td>No</td>";
 					echo "</tr>";
 					echo "</form>";
 					}

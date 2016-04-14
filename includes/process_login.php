@@ -14,7 +14,7 @@ if (isset($_POST['username'], $_POST['password'])) {
 			header("Location: ../adduser.php");
 			exit;
 		}
-		elseif($role == "GCMEMBER"){
+		elseif($role == "GCMEMBER" || $role == "GCCHAIR"){
 			header('Location: ../gcmember.php');
 			exit;
 		}
