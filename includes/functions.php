@@ -175,7 +175,7 @@ function oldGCTable($sessionID,$mysqli){
 							echo "<td>Undefined</td>";
 						$obj3 = $mysqli->query("SELECT Comments FROM score WHERE user_ID = ".$_SESSION['user_ID']." AND nomination_id = ".$obj->nomination_id)->fetch_object();
 						if ($obj3)
-							$obj3 = $ob3->Comments;
+							$obj3 = $obj3->Comments;
 						else
 							$obj3 = "";
 						echo "<td>".$obj3."</td>";
